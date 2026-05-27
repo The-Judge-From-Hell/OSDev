@@ -52,12 +52,12 @@ int memcmp (const void *source, const void *copy, size_t byte_count){ // func de
 }
 
 // memchr - hunter and finder
-void* memchr(const void *source, const int search, size_t size){
-    const unsigned char *s = source;
-     for (size_t i = 0; i < size; i++){
-        if (s[i] == search){
-            return (void*)&s[i];
+void* memchr(const void *source, const int search, size_t size){ // source, search target, no of bytes to look..
+    const unsigned char *s = source;                             // char to increment a byte at a time.
+     for (size_t i = 0; i < size; i++){                          // classic for loop
+        if (s[i] == search){                                     // condition for equality
+            return (void*)&s[i];                                 // if equal, send memory address
         }
      }
-     return 0;
+     return 0;                                                   // returns 0 if not found in limit.
 }
