@@ -1,4 +1,5 @@
-typedef unsigned long long size_t; // C has no idea what the fuck 'size_t' actually is! it should be built in by this time.
+#include "memory.h"
+
 // memset - used to overwrite a buffer with a single value.
 void* memset (void *buffer_pointer, int value, size_t n){ // pointer, value, times to write. void* as it have to accept any kind of garbage.
     unsigned char *p = buffer_pointer;                    // this pos is crucial as C cant do shit on void!! use it to point and change it to char for actual action.

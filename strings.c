@@ -1,7 +1,7 @@
-typedef unsigned long long size_t; // C has no idea what the fuck 'size_t' actually is! it should be built in by this time.
+#include "strings.h"
 
 // strlen - counts the string length or whatever
-int* strlen (void *string){
+int strlen (void *string){
     const unsigned char *s = string;
     for (size_t i=0; ;i++){ // no check condition as it should be infinite
         if (s[i] == '\0'){  // not "" as "" is str and '' is chr
