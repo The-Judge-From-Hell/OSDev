@@ -1,5 +1,8 @@
 /* ==========================================
    STAGE 3: THE LINKER SCRIPT (link.ld)
+   i didnt care to learn a new syntax just to 
+   glue some shit. I asked gemma.it did the 
+   heavylifting.
    ========================================== */
 
 ENTRY(_start)
