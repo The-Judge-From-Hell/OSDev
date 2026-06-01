@@ -1,6 +1,7 @@
 #ifndef strings_h_
 #define strings_h_
 
+// same shit here happening too. but the shit idk i get it.
 typedef unsigned long long size_t; // C has no idea what the fuck 'size_t' actually is! it should be built in by this time.
 int strlen (void *string);
 char *strcpy(char *destination, const char *source);

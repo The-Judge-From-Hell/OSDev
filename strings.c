@@ -10,7 +10,8 @@ int strlen (void *string){
     }
 }
 
-// strcpy - copies a string to other 
+// strcpy - copies a string to other but i think its similar to memcpy but diff 
+// datatype.
 char* strcpy (char *destination, const char *source){
     unsigned char *d = destination;
     const unsigned char *s = source;
@@ -25,7 +26,7 @@ char* strcpy (char *destination, const char *source){
     }
 }
 
-// strcmp - compare 2 strings for n bytes limit
+// strcmp - compare 2 strings for n bytes limit and same as memcmp but why??
 int strcmp (const char *source, const char *copy){
     const unsigned char *s = source;
     const unsigned char *c = copy;

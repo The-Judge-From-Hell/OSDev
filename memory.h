@@ -1,6 +1,10 @@
 #ifndef memory_h_
 #define memory_h_
 
+// this is a so called header file, which has defs of funcs created in other c files
+// id relaay fucking know how they link to the c thing.
+// i never mentioned "memory.c" in here nut included "memory.h" in in that c file
+
 typedef unsigned long long size_t; // C has no idea what the fuck 'size_t' actually is! it should be built in by this time.
 
 void *memset(void *buffer_pointer, int value, size_t n);
