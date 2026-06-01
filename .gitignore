@@ -6,3 +6,5 @@ first.dSYM/Contents/Resources/DWARF/first
 first.dSYM/Contents/Info.plist
 first
 .DS_Store
+kasm.o
+*.o

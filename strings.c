@@ -13,8 +13,8 @@ int strlen (void *string){
 // strcpy - copies a string to other but i think its similar to memcpy but diff 
 // datatype.
 char* strcpy (char *destination, const char *source){
-    unsigned char *d = destination;
-    const unsigned char *s = source;
+    char *d = destination; // make gcc happy
+    const char *s = source; // make gcc happy
     for (size_t i = 0; ;i++){
         if (s[i] != '\0'){
             d[i] = s[i];
