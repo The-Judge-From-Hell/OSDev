@@ -28,8 +28,8 @@ char* strcpy (char *destination, const char *source){
 
 // strcmp - compare 2 strings for n bytes limit and same as memcmp but why??
 int strcmp (const char *source, const char *copy){
-    const unsigned char *s = source;
-    const unsigned char *c = copy;
+    const char *s = source;
+    const char *c = copy;
     for (size_t i = 0; ; i++){
         if (s[i] != c[i]){
             return s[i] - c[i];
