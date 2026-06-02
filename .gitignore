@@ -8,3 +8,4 @@ first
 .DS_Store
 kasm.o
 *.o
+kernel.bin
