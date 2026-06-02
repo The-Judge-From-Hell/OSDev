@@ -11,7 +11,7 @@ isr33:
 
     ; Save all volatile CPU registers so C code doesn't corrupt them
     push rax
-    push rrcx
+    push rcx
     push rdx
     push rsi
     push rdi
