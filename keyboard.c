@@ -33,7 +33,7 @@ void keyboard_handler(void){
 
     // For now, we will just print to prove the hardware pipeline works
     // (Assuming you have an absolute basic print character debug or kprint available)
-    kprint("\nIt actually works", 0xF);
+    // kprint("\nIt actually works", 0xF);
 
     // 3. CRITICAL: Send "End of Interrupt" (EOI) signal back to the PIC.
     // If you don't do this, the PIC thinks the CPU is still busy and will
