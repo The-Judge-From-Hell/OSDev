@@ -18,9 +18,11 @@ section .bss                ; to setup some stack for C
 section .rodata
     align 8
     gdt64:                  ; 64-Bit Global Descriptor Table
-        dq 0                ; Null descriptor
+        dq 0                ; 0x00: Null descriptor
     .code: equ $ - gdt64
-        dq (1<<43) | (1<<44) | (1<<47) | (1<<53) ; 64-bit Code segment
+        dq (1<<43) | (1<<44) | (1<<47) | (1<<53) ; 0x08: 64-bit Code segment
+    .data: equ $ - gdt64
+        dq (1<<41) | (1<<44) | (1<<47)           ; 0x10: 64-bit Data segment <-- ADDED THIS
     .pointer:
         dw $ - gdt64 - 1
         dq gdt64
@@ -72,9 +74,14 @@ _start:
 
 bits 64
 _start64:
+    mov ax, 0x10            ; 0x10 = Data descriptor index
+    mov ds, ax              ; Update data segment
+    mov es, ax              ; Update extra segment
+    mov ss, ax              ; Update stack segment (Fixes your crash!)
+    
     mov rsp, stack_top      ; Update stack pointer to 64-bit register
     call kernel_main        ; fucks off to your 64-bit C kernel
 
 .halt:
-    hlt                     ; CPU sleeps if C ever returns
-    jmp .halt               ; trap CPU here so that it doesnt fuckoff somewhere.
+    hlt 
+    jmp .halt

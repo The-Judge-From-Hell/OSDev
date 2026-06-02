@@ -21,7 +21,7 @@ struct idt_register{
 } __attribute__((packed)); // same. no compiler extras
 
 // Public functions other files can see
-void idt_init(void);
-void idt_set_gate(uint8_t num, uint64_t base);
+void idt_starter(void);
+void set_idt_gates(uint8_t num, uint64_t base);
 
 #endif
