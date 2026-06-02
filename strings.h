@@ -6,5 +6,7 @@ typedef unsigned long long size_t; // C has no idea what the fuck 'size_t' actua
 int strlen (void *string);
 char *strcpy(char *destination, const char *source);
 int strcmp(const char *source, const char *copy);
+char *itoa(long long value, char *str, int base); // for int to ascii.
+char *itoah(unsigned long long value, char *str); // Specific for 64-bit Hex addresses
 
 #endif

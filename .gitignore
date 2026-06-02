@@ -9,3 +9,4 @@ first
 kasm.o
 *.o
 kernel.bin
+test.c

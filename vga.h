@@ -24,7 +24,9 @@
 
 // 3. Driver Function Declarations.
 void wipe_display(unsigned char color_attr);
+void digitizer(int target_num, char *buffer);
 void kprint(const char *text, unsigned char color_attr);
+void vga_scroll(unsigned char color);
 
 // 4. Console width and height 
 #define vga_width 80
