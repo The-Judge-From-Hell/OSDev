@@ -10,3 +10,4 @@ kasm.o
 *.o
 kernel.bin
 test.c
+kernel64.elf
