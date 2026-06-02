@@ -7,6 +7,9 @@ struct idt_register idtr;
 // 0x08 is the standard index for Kernel Code in a 64-bit GDT
 #define KERNEL_CS 0x08
 
+// Declare the assembly as an external function
+extern void isr33(void);
+
 // func that cuts 64 bit addrs to fit the struct.
 void set_idt_gates(uint8_t num, uint64_t base){
     idt[num].offset_low  = (base & 0xFFFF); // first 16 bits
