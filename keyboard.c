@@ -5,6 +5,9 @@
 #define keyboard_port 0x60
 #define pic_master_cmd 0x20
 
+char commands[256];
+uint8_t index = 0;
+
 // Index = Scancode. Value = ASCII.
 const unsigned char kbd_us[128] = {
     0, 27, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 0,
@@ -20,6 +23,13 @@ static const char kbd_us_shift[128] = {
 
 static int shift_state = 0;
 
+// process placeholder
+void processor(char *text){
+    kprint("\n\nTEXT ENTERED : ", VGA_COLOR_LIGHT_BLUE);
+    kprint(text, VGA_COLOR_MAGENTA);
+    index = 0;
+}
+
 // avtual handling happend here
 void keyboard_handler(uint8_t scaned){
     scaned = inb(keyboard_port);
@@ -34,13 +44,23 @@ void keyboard_handler(uint8_t scaned){
             break; // Shift Release
         
         case 0x0E: // Backspace
-            kprint("\b",VGA_COLOR_BLACK);
+            if (index > 0){
+                index--;
+                commands[index] = '\0';
+                kprint("\b",VGA_COLOR_BLACK);
+            }
             break;
         
+        case 0x1C:
+            if (index < 255){
+                commands[index] = '\0';
+            }
+            processor(commands);
+            break;
         default:
             // Translate scan code -> ASCII based on shift_state
             break;
-    }
+        }
 
     // keyboard sends signal when key is pressed and released
     // so, release shouldnt trigger the print cmds
@@ -55,6 +75,10 @@ void keyboard_handler(uint8_t scaned){
         // holy fuck. finally a ternary operator comes handy!!
         char letter = shift_state ? kbd_us_shift[scaned] : kbd_us[scaned];
         if (letter != 0){
+            if (index < 255){
+                commands[index] = letter;
+                index++;
+            }
             char str[2] = {letter, '\0'};
             kprint(str, 0x0F);
         }
