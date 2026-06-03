@@ -1,20 +1,46 @@
 #include "io.h"
 #include "vga.h"
+#include <stdint.h>
 
 #define keyboard_port 0x60
 #define pic_master_cmd 0x20
 
 // Index = Scancode. Value = ASCII.
 const unsigned char kbd_us[128] = {
-    0, 27, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '\b',
+    0, 27, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 0,
     '\t', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n',
     0, 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', '`', 0, '\\',
     'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 0, '*', 0, ' '};
 
+static const char kbd_us_shift[128] = {
+    0, 27, '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', 0,
+    '\t', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', '\n',
+    0, 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', '"', '~', 0,
+    '|', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', 0, '*', 0, ' '};
+
+static int shift_state = 0;
 
 // avtual handling happend here
-void keyboard_handler(void){
-    unsigned char scaned = inb(keyboard_port);
+void keyboard_handler(uint8_t scaned){
+    scaned = inb(keyboard_port);
+
+    switch (scaned){
+        case 0x2A: case 0x36:
+            shift_state = 1;
+            break; // Shift Press
+
+        case 0xAA: case 0xB6:
+            shift_state = 0;
+            break; // Shift Release
+        
+        case 0x0E: // Backspace
+            kprint("\b",VGA_COLOR_BLACK);
+            break;
+        
+        default:
+            // Translate scan code -> ASCII based on shift_state
+            break;
+    }
 
     // keyboard sends signal when key is pressed and released
     // so, release shouldnt trigger the print cmds
@@ -23,20 +49,19 @@ void keyboard_handler(void){
     }
 
     // actual scaned to ascii convs
-    if (scaned < 128 && kbd_us[scaned] != 0){ // if less than 128 and in uskbd,
-        char letter = kbd_us[scaned]; // assigns letter
-        char str[2] = {letter, '\0'}; // Print single char string
-        kprint(str, 0x0F);            // fucks off to screen.
+    // checks if the shift is active. if yes, fucks off to the shift layout
+    // if not, uses normal one.
+    if (scaned < 128){
+        // holy fuck. finally a ternary operator comes handy!!
+        char letter = shift_state ? kbd_us_shift[scaned] : kbd_us[scaned];
+        if (letter != 0){
+            char str[2] = {letter, '\0'};
+            kprint(str, 0x0F);
+        }
     }
 
-    // Clear the screen or print a confirmation to verify life
-
-    // For now, we will just print to prove the hardware pipeline works
-    // (Assuming you have an absolute basic print character debug or kprint available)
-    // kprint("\nIt actually works", 0xF);
-
-    // 3. CRITICAL: Send "End of Interrupt" (EOI) signal back to the PIC.
-    // If you don't do this, the PIC thinks the CPU is still busy and will
+    // CRITICAL: Send "End of Interrupt" (EOI) signal back to the PIC.
+    // If i don't do this, the PIC thinks the CPU is still busy and will
     // freeze all future keyboard signals forever.
     eoi:
         outb(pic_master_cmd, 0x20);

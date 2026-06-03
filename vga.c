@@ -1,5 +1,6 @@
 #include "strings.h"
 #include "vga.h"
+#include <stdint.h>
 
 // this shit prints out strings to screen or clears it.
 typedef unsigned long long size_t;
@@ -51,6 +52,15 @@ void kprint(const char *text, unsigned char color_attr){
         if (text[i] == '\n'){
             // takes current index, divides by 80, adds 1, multiplys by 80
             cursor_index = ((cursor_index / vga_width) + 1) * vga_width;
+        }
+
+        // backspace mechanish
+        else if (text[i] == '\b'){
+            if (cursor_index > 0){ // so that a backspace dont fuck up my OS
+                cursor_index--;
+                screen[cursor_index].character = ' ';
+                screen[cursor_index].attribute = color_attr;
+            }
         }
 
         // Print character using struct indexing
