@@ -11,12 +11,12 @@ void kernel_main (void){
 
     // Clear the screen to blue so tht i know this works and try print stuff
     wipe_display(color);
-    kprint("Hello World! Booted finally. BTW, Welcome to OSZero", color);
+    kprint("Hello World! Booted finally. BTW, Welcome to OSZero!\n", color);
     
-    // FIX 1: Initialize IDT setup
+    // Initialize IDT setup
     idt_starter();
 
-    // FIX 2: Clear interrupt flag (Unlock CPU input)
+    // Clear interrupt flag (Unlock CPU input)
     __asm__ volatile("sti");
     
     // Core Executive Loop to keep the CPU alive
