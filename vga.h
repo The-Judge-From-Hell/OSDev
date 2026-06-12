@@ -26,6 +26,7 @@
 void wipe_display(unsigned char color_attr);
 void kprint(const char *text, unsigned char color_attr);
 void vga_scroll(unsigned char color);
+void update_cursor(int x, int y);
 // 4. Console width and height 
 #define vga_width 80
 #define vga_height 25

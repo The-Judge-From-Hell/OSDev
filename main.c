@@ -12,7 +12,8 @@ void kernel_main (void){
     // Clear the screen to blue so tht i know this works and try print stuff
     wipe_display(color);
     kprint("Hello World! Booted finally. BTW, Welcome to OSZero!\n", color);
-    
+    kprint("\n\nOSZero > ", VGA_COLOR_LIGHT_GREEN);
+
     // Initialize IDT setup
     idt_starter();
 

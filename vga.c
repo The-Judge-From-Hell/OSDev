@@ -1,5 +1,6 @@
 #include "strings.h"
 #include "vga.h"
+#include "io.h"
 #include "types.h"
 #include <stdint.h>
 
@@ -13,6 +14,24 @@ struct vga_out{
 // put the pointer to hw address
 volatile struct vga_out *screen = (volatile struct vga_out *)0xB8000;
 unsigned int cursor_index = 0;
+// cursor updater
+void update_cursor(int x, int y){
+    // since the screen is a buffer, i need to calc the cursor position from the last char
+    // row, col pos. row x 80 gives totla lines above the char and + char gives char pos in the
+    // cur line
+    uint16_t offset = (x * 80) + y;
+
+    //since crtc has 2 bytes, high and low,
+    uint8_t high = (offset >> 8) & 0xFF;
+    uint8_t low = offset & 0xFF;
+
+    //writing to regs.
+    outb(0x3D4, 14);
+    outb(0x3D5, high);
+
+    outb(0x3D4, 15);
+    outb(0x3D5, low);
+}
 
 // scrolling mech
 void vga_scroll(unsigned char color){
@@ -67,10 +86,15 @@ void kprint(const char *text, unsigned char color_attr){
             screen[cursor_index].attribute = color_attr;
             cursor_index++;
         }
-
+        int row = cursor_index / vga_width;
+        int col = cursor_index % vga_width;
+        update_cursor(row, col);
         // Boundary check
         if (cursor_index >= vga_buffer_size){
             vga_scroll(color_attr);
+            row = cursor_index / vga_width;
+            col = cursor_index % vga_width;
+            update_cursor(row, col);
         }
     }
 }

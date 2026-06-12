@@ -5,8 +5,8 @@
 #define keyboard_port 0x60
 #define pic_master_cmd 0x20
 
-static char commands[256];
-static uint8_t index = 0;
+char commands[256];
+uint8_t index = 0;
 
 // Index = Scancode. Value = ASCII.
 const unsigned char kbd_us[128] = {
@@ -22,20 +22,19 @@ static const char kbd_us_shift[128] = {
     '|', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', 0, '*', 0, ' '};
 
 static int shift_state = 0;
-
 // process placeholder
-void processor(char *text){
-    kprint("\n\nTEXT ENTERED : ", VGA_COLOR_LIGHT_BLUE);
+void processor(char *text, uint8_t index)
+{
+    kprint("\n", VGA_COLOR_BLACK);
     kprint(text, VGA_COLOR_MAGENTA);
+    kprint("\nOSZero > ", VGA_COLOR_LIGHT_GREEN);
     index = 0;
 }
-
 // avtual handling happend here
 void keyboard_handler(void){
      uint8_t scaned = inb(keyboard_port);
 
-     switch (scaned)
-     {
+     switch (scaned){
      case 0x2A:
      case 0x36:
          shift_state = 1;
@@ -47,8 +46,7 @@ void keyboard_handler(void){
          break; // Shift Release
 
      case 0x0E: // Backspace
-         if (index > 0)
-         {
+         if (index > 0){
              index--;
              commands[index] = '\0';
              kprint("\b", VGA_COLOR_BLACK);
@@ -56,11 +54,12 @@ void keyboard_handler(void){
          break;
 
      case 0x1C:
-         if (index < 255)
-         {
+         if (index < 255){
              commands[index] = '\0';
          }
-         processor(commands);
+         processor(commands, index);
+         index = 0;
+         
          goto eoi;
          break;
      default:
