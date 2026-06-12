@@ -1,9 +1,7 @@
 #include "strings.h"
 #include "vga.h"
+#include "types.h"
 #include <stdint.h>
-
-// this shit prints out strings to screen or clears it.
-typedef unsigned long long size_t;
 
 // learnt structs literally for this, idk where to use them anywhere else.
 // but they are cool..
@@ -74,49 +72,5 @@ void kprint(const char *text, unsigned char color_attr){
         if (cursor_index >= vga_buffer_size){
             vga_scroll(color_attr);
         }
-    }
-}
-// We pass the buffer in so the function doesn't use unsafe random pointers
-void digitizer(int target_num, char *buffer){
-    int count = 0;
-    int neg_check = 0;
-
-    // check for -ve numbers..
-    if (target_num < 0){
-        neg_check = 1;
-        target_num = -target_num;
-    }
-
-    // if the number is literally 0
-    if (target_num == 0){
-        buffer[0] = '0';
-        buffer[1] = '\0';
-        return;
-    }
-    while (target_num != 0){
-        // Add '0' to convert the raw math remainder into a printable text character
-        buffer[count] = (target_num % 10) + '0';
-        target_num = target_num / 10;
-        count++;
-    }
-    // Add - to the end if needed (it gets reversed to the front)
-    if (neg_check){
-        buffer[count] = '-';
-        count++;
-    }
-
-    // adding \0 so that string actually ends
-    buffer[count] = '\0';
-
-    // reverse the string
-    int start = 0;
-    int end = count - 1;
-    while (start < end){
-        // simple temporary variable swap
-        char temp = buffer[start];
-        buffer[start] = buffer[end];
-        buffer[end] = temp;
-        start++;
-        end--;
     }
 }

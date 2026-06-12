@@ -1,7 +1,7 @@
 #include "strings.h"
-
+#include "types.h"
 // strlen - counts the string length or whatever
-int strlen (void *string){
+size_t strlen(const char *string){
     const unsigned char *s = string;
     for (size_t i=0; ;i++){ // no check condition as it should be infinite
         if (s[i] == '\0'){  // not "" as "" is str and '' is chr

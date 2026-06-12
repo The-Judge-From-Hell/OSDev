@@ -49,9 +49,6 @@ void idt_starter(void){
     // Unmask Keyboard line (IRQ 1) only, mask rest for safety
     outb(0x21, 0xFD); // 0xFD = 11111101b (IRQ 1 unmasked)
     outb(0xA1, 0xFF); // Disable all slave IRQs
-
-    // Map Keyboard interrupt to Assembly Wrapper
-    set_idt_gates(33, (uint64_t)isr33);
     
     // config idtr tables
     idtr.limit = (sizeof(struct idt_gate) * 256) - 1;

@@ -5,8 +5,8 @@
 #define keyboard_port 0x60
 #define pic_master_cmd 0x20
 
-char commands[256];
-uint8_t index = 0;
+static char commands[256];
+static uint8_t index = 0;
 
 // Index = Scancode. Value = ASCII.
 const unsigned char kbd_us[128] = {
@@ -31,36 +31,42 @@ void processor(char *text){
 }
 
 // avtual handling happend here
-void keyboard_handler(uint8_t scaned){
-    scaned = inb(keyboard_port);
+void keyboard_handler(void){
+     uint8_t scaned = inb(keyboard_port);
 
-    switch (scaned){
-        case 0x2A: case 0x36:
-            shift_state = 1;
-            break; // Shift Press
+     switch (scaned)
+     {
+     case 0x2A:
+     case 0x36:
+         shift_state = 1;
+         break; // Shift Press
 
-        case 0xAA: case 0xB6:
-            shift_state = 0;
-            break; // Shift Release
-        
-        case 0x0E: // Backspace
-            if (index > 0){
-                index--;
-                commands[index] = '\0';
-                kprint("\b",VGA_COLOR_BLACK);
-            }
-            break;
-        
-        case 0x1C:
-            if (index < 255){
-                commands[index] = '\0';
-            }
-            processor(commands);
-            break;
-        default:
-            // Translate scan code -> ASCII based on shift_state
-            break;
-        }
+     case 0xAA:
+     case 0xB6:
+         shift_state = 0;
+         break; // Shift Release
+
+     case 0x0E: // Backspace
+         if (index > 0)
+         {
+             index--;
+             commands[index] = '\0';
+             kprint("\b", VGA_COLOR_BLACK);
+         }
+         break;
+
+     case 0x1C:
+         if (index < 255)
+         {
+             commands[index] = '\0';
+         }
+         processor(commands);
+         goto eoi;
+         break;
+     default:
+         // Translate scan code -> ASCII based on shift_state
+         break;
+     }
 
     // keyboard sends signal when key is pressed and released
     // so, release shouldnt trigger the print cmds
